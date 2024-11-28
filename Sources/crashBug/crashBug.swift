@@ -47,6 +47,7 @@ import UserNotifications
          super.init()
          requestNotificationPermissions()
          if !hasShownWelcomeMessage {
+             NSLog("Presenting crashBug Welcome Message in 5 seconds")
              presentWelcomeMessage()
          } else if isEnabled {
              startMonitoring()
@@ -54,31 +55,23 @@ import UserNotifications
      }
      
      func presentWelcomeMessage() {
-         NSLog("Presenting crashBug Welcome Message in 5 seconds")
+     
          DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
              guard let window = UIApplication.shared.windows.first else { return }
 
-             // Create a blurred background view
-             let blurEffect = UIBlurEffect(style: .systemMaterialDark)
-             let blurView = UIVisualEffectView(effect: blurEffect)
-             blurView.frame = window.bounds
-             blurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-             blurView.tag = 999 // Tag to identify and remove it later
-             window.addSubview(blurView)
-
-             // Container for the content
+             // Container for the blurred view and content
              let containerView = UIView()
              containerView.translatesAutoresizingMaskIntoConstraints = false
-             containerView.backgroundColor = UIColor.black.withAlphaComponent(0.8)
+             containerView.backgroundColor = .clear // Make background transparent
              containerView.layer.cornerRadius = 12
              containerView.layer.masksToBounds = true
-             blurView.contentView.addSubview(containerView)
+             window.addSubview(containerView)
 
-             // Logo ImageView
-             let imageView = UIImageView(image: UIImage(named: "dTechCrash"))
-             imageView.contentMode = .scaleAspectFit
-             imageView.translatesAutoresizingMaskIntoConstraints = false
-             containerView.addSubview(imageView)
+             // Create a blurred background view inside the container
+             let blurEffect = UIBlurEffect(style: .systemMaterialDark)
+             let blurView = UIVisualEffectView(effect: blurEffect)
+             blurView.translatesAutoresizingMaskIntoConstraints = false
+             containerView.addSubview(blurView)
 
              // Title Label
              let titleLabel = UILabel()
@@ -125,20 +118,18 @@ import UserNotifications
              noShowAgainButton.addTarget(self, action: #selector(self.disableMonitoringPermanently), for: .touchUpInside)
              containerView.addSubview(noShowAgainButton)
 
-             // Layout Constraints
+             // Add constraints
              NSLayoutConstraint.activate([
-                 containerView.centerYAnchor.constraint(equalTo: blurView.contentView.centerYAnchor),
-                 containerView.centerXAnchor.constraint(equalTo: blurView.contentView.centerXAnchor),
+                 containerView.centerYAnchor.constraint(equalTo: window.centerYAnchor),
+                 containerView.centerXAnchor.constraint(equalTo: window.centerXAnchor),
                  containerView.widthAnchor.constraint(lessThanOrEqualToConstant: 350),
-                 containerView.leadingAnchor.constraint(greaterThanOrEqualTo: blurView.contentView.leadingAnchor, constant: 20),
-                 containerView.trailingAnchor.constraint(lessThanOrEqualTo: blurView.contentView.trailingAnchor, constant: -20),
 
-                 imageView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 20),
-                 imageView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-                 imageView.widthAnchor.constraint(equalToConstant: 80),
-                 imageView.heightAnchor.constraint(equalToConstant: 80),
+                 blurView.topAnchor.constraint(equalTo: containerView.topAnchor),
+                 blurView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+                 blurView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+                 blurView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
 
-                 titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 20),
+                 titleLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 20),
                  titleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
                  titleLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
 
