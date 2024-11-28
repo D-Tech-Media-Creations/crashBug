@@ -18,7 +18,7 @@ import UserNotifications
 
 @available(iOS 13.0, *)
 @MainActor
-public class CrashBug: NSObject {
+ class CrashBug: NSObject {
     // Property to check if CrashBug is enabled
     var isEnabled: Bool {
         get {
@@ -30,8 +30,8 @@ public class CrashBug: NSObject {
     }
     
     // Singleton instance
-    public static let shared = CrashBug()
-    private var latestCrashLog: String?
+     static let shared = CrashBug()
+     var latestCrashLog: String?
     
     override init() {
         super.init()
@@ -50,7 +50,7 @@ public class CrashBug: NSObject {
     }
     
     // Set up signal handlers for common signals
-    private static func setupSignalHandler() {
+     static func setupSignalHandler() {
         signal(SIGABRT, crashSignalHandler)
         signal(SIGILL, crashSignalHandler)
         signal(SIGSEGV, crashSignalHandler)
@@ -60,19 +60,19 @@ public class CrashBug: NSObject {
     }
     
     // C-compatible signal handler
-    private static let crashSignalHandler: @convention(c) (Int32) -> Void = { signal in
+     static let crashSignalHandler: @convention(c) (Int32) -> Void = { signal in
         CrashBug.handleSignal(signal)
     }
     
     // Handle uncaught exceptions
-    private static func handleException(exception: NSException) {
+     static func handleException(exception: NSException) {
         let crashLog = CrashBug.shared.createLog(for: exception)
         CrashBug.shared.saveCrashLog(crashLog)
         CrashBug.shared.displayCrashNotification(with: crashLog)
     }
     
     // Handle signal-based crashes
-    private static func handleSignal(_ signal: Int32) {
+     static func handleSignal(_ signal: Int32) {
         var crashInfo = "App received signal: \(signal)\n"
         crashInfo += "Call stack:\n"
         crashInfo += Thread.callStackSymbols.joined(separator: "\n")
@@ -81,7 +81,7 @@ public class CrashBug: NSObject {
     }
     
     // Create a log for the given exception
-    private func createLog(for exception: NSException) -> String {
+     func createLog(for exception: NSException) -> String {
         var log = "App Crash Log\n"
         log += "====================\n"
         log += "Human Readable Section\n"
@@ -98,7 +98,7 @@ public class CrashBug: NSObject {
     }
     
     // Save the crash log to a file
-    private func saveCrashLog(_ log: String) {
+     func saveCrashLog(_ log: String) {
         guard let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
             return
         }
@@ -113,7 +113,7 @@ public class CrashBug: NSObject {
     }
     
     // Request notification permissions
-    private func requestNotificationPermissions() {
+     func requestNotificationPermissions() {
         let center = UNUserNotificationCenter.current()
         center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
             if granted {
@@ -125,7 +125,7 @@ public class CrashBug: NSObject {
     }
     
     // Display crash notification with summary
-    private func displayCrashNotification(with log: String) {
+     func displayCrashNotification(with log: String) {
         let appName = Bundle.main.infoDictionary?[kCFBundleNameKey as String] as? String ?? "The App"
         let logSummary = log.split(separator: "\n").prefix(5).joined(separator: "\n")
         
@@ -165,7 +165,7 @@ extension CrashBug: UNUserNotificationCenterDelegate {
 
     
     // Display the log file within the app
-    private func displayCrashLog(_ log: String) {
+     func displayCrashLog(_ log: String) {
         let alert = UIAlertController(title: "Crash Log", message: log, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         
@@ -174,4 +174,6 @@ extension CrashBug: UNUserNotificationCenterDelegate {
         }
     }
 }
+
+
 
