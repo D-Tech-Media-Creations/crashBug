@@ -116,41 +116,7 @@ import UserNotifications
              noShowAgainButton.addTarget(self, action: #selector(self.disableMonitoringPermanently), for: .touchUpInside)
              containerView.addSubview(noShowAgainButton)
 
-             // Add constraints
-             NSLayoutConstraint.activate([
-                 containerView.centerYAnchor.constraint(equalTo: window.centerYAnchor),
-                 containerView.centerXAnchor.constraint(equalTo: window.centerXAnchor),
-                 containerView.widthAnchor.constraint(lessThanOrEqualToConstant: 350),
-
-                 blurView.topAnchor.constraint(equalTo: containerView.topAnchor),
-                 blurView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-                 blurView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-                 blurView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
-
-                 titleLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 20),
-                 titleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
-                 titleLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
-
-                 messageLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10),
-                 messageLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
-                 messageLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
-
-                 yesButton.topAnchor.constraint(equalTo: messageLabel.bottomAnchor, constant: 20),
-                 yesButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
-                 yesButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
-                 yesButton.heightAnchor.constraint(equalToConstant: 44),
-
-                 noButton.topAnchor.constraint(equalTo: yesButton.bottomAnchor, constant: 10),
-                 noButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
-                 noButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
-                 noButton.heightAnchor.constraint(equalToConstant: 44),
-
-                 noShowAgainButton.topAnchor.constraint(equalTo: noButton.bottomAnchor, constant: 10),
-                 noShowAgainButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
-                 noShowAgainButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
-                 noShowAgainButton.heightAnchor.constraint(equalToConstant: 44),
-                 noShowAgainButton.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -20)
-             ])
+      
          }
      }
      
