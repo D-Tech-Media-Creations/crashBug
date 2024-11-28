@@ -54,8 +54,8 @@ import UserNotifications
          }
      }
      
-     func presentWelcomeMessage() {
-     
+      func presentWelcomeMessage() {
+         NSLog("Presenting crashBug Welcome Message in 5 seconds")
          DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
              guard let window = UIApplication.shared.windows.first else { return }
 
@@ -93,28 +93,16 @@ import UserNotifications
              messageLabel.translatesAutoresizingMaskIntoConstraints = false
              containerView.addSubview(messageLabel)
 
-             // Buttons
-             let yesButton = UIButton(type: .system)
-             yesButton.setTitle("Yes", for: .normal)
-             yesButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-             yesButton.tintColor = .systemGreen
-             yesButton.translatesAutoresizingMaskIntoConstraints = false
+             // Styled Buttons
+             let yesButton = createButton(title: "Yes", backgroundColor: .systemGreen)
              yesButton.addTarget(self, action: #selector(self.enableMonitoring), for: .touchUpInside)
              containerView.addSubview(yesButton)
 
-             let noButton = UIButton(type: .system)
-             noButton.setTitle("No", for: .normal)
-             noButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-             noButton.tintColor = .systemYellow
-             noButton.translatesAutoresizingMaskIntoConstraints = false
+             let noButton = createButton(title: "No", backgroundColor: .systemYellow)
              noButton.addTarget(self, action: #selector(self.disableMonitoring), for: .touchUpInside)
              containerView.addSubview(noButton)
 
-             let noShowAgainButton = UIButton(type: .system)
-             noShowAgainButton.setTitle("No, Don't Show Again", for: .normal)
-             noShowAgainButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-             noShowAgainButton.tintColor = .systemRed
-             noShowAgainButton.translatesAutoresizingMaskIntoConstraints = false
+             let noShowAgainButton = createButton(title: "No, Don't Show Again", backgroundColor: .systemRed)
              noShowAgainButton.addTarget(self, action: #selector(self.disableMonitoringPermanently), for: .touchUpInside)
              containerView.addSubview(noShowAgainButton)
 
@@ -138,13 +126,19 @@ import UserNotifications
                  messageLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
 
                  yesButton.topAnchor.constraint(equalTo: messageLabel.bottomAnchor, constant: 20),
-                 yesButton.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+                 yesButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
+                 yesButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
+                 yesButton.heightAnchor.constraint(equalToConstant: 44),
 
                  noButton.topAnchor.constraint(equalTo: yesButton.bottomAnchor, constant: 10),
-                 noButton.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+                 noButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
+                 noButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
+                 noButton.heightAnchor.constraint(equalToConstant: 44),
 
                  noShowAgainButton.topAnchor.constraint(equalTo: noButton.bottomAnchor, constant: 10),
-                 noShowAgainButton.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+                 noShowAgainButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
+                 noShowAgainButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
+                 noShowAgainButton.heightAnchor.constraint(equalToConstant: 44),
                  noShowAgainButton.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -20)
              ])
          }
