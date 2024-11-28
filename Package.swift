@@ -1,4 +1,33 @@
-// swift-tools-version: 6.0
+// swift-tools-version:5.5
+import PackageDescription
+
+let package = Package(
+    name: "crashBug",
+    platforms: [
+        .iOS(.v13)
+    ],
+    products: [
+        .library(
+            name: "crashBug",
+            targets: ["crashBug"]
+        ),
+    ],
+    targets: [
+        .target(
+            name: "crashBug",
+            dependencies: [],
+            path: "Sources",
+            resources: [
+                .process("Resources")
+            ]
+        ),
+        .testTarget(
+            name: "crashBugTests",
+            dependencies: ["crashBug"],
+            path: "Tests"
+        ),
+    ]
+)// swift-tools-version: 6.0
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
