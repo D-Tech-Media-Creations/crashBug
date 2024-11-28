@@ -30,7 +30,7 @@ import UserNotifications
     }
     
     // Singleton instance
-     static let shared = CrashBug()
+     public static let shared = CrashBug()
      var latestCrashLog: String?
     
     override init() {
