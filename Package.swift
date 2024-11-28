@@ -14,7 +14,7 @@ let package = Package(
     ],
     targets: [
         .target(
-               name: "AppResources",
+               name: "crashBug",
                dependencies: [],
                resources: [
                    .process("Resources")]
