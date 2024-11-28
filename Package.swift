@@ -14,11 +14,10 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "crashBug",
-            dependencies: [],
-            resources: [
-                Resource.process("Media.xcassets")
-                ]
-        )
+               name: "AppResources",
+               dependencies: [],
+               resources: [
+                   .process("Resources")]
+           ),
     ]
 )
