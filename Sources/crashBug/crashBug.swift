@@ -309,10 +309,13 @@ extension CrashBug: UNUserNotificationCenterDelegate {
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         
         if let rootVC = UIApplication.shared.windows.first?.rootViewController {
+            rootVC.modalPresentationStyle = .overFullScreen
+            rootVC.modalTransitionStyle = .coverVertical
             rootVC.present(alert, animated: true, completion: nil)
         }
     }
 }
+
 
 
 
