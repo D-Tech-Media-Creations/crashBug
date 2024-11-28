@@ -18,7 +18,7 @@ import UserNotifications
 
 @available(iOS 13.0, *)
 @MainActor
-class CrashBug: NSObject {
+public class CrashBug: NSObject {
     // Property to check if CrashBug is enabled
     var isEnabled: Bool {
         get {
