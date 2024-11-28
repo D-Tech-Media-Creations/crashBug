@@ -75,7 +75,7 @@ import UserNotifications
              blurView.contentView.addSubview(containerView)
 
              // Logo ImageView
-             let imageView = UIImageView(image: UIImage(named: "dTechCrash", in: Bundle(), compatibleWith: nil))
+             let imageView = UIImageView(image: UIImage(named: "dTechCrash"))
              imageView.contentMode = .scaleAspectFit
              imageView.translatesAutoresizingMaskIntoConstraints = false
              containerView.addSubview(imageView)
