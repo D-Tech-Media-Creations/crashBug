@@ -55,7 +55,7 @@ import UserNotifications
      }
      
       func presentWelcomeMessage() {
-         NSLog("Presenting crashBug Welcome Message in 5 seconds")
+
          DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
              guard let window = UIApplication.shared.windows.first else { return }
 
