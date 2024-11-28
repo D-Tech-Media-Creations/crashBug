@@ -17,8 +17,8 @@ let package = Package(
             name: "crashBug",
             dependencies: [],
             resources: [
-                .process("Resources") // Include the Resources folder
-            ]
+                Resource.process("Media.xcassets")
+                ]
         )
     ]
 )
