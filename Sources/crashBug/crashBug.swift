@@ -64,7 +64,7 @@ import UserNotifications
          return button
      }
      
-      func presentWelcomeMessage() {
+     private func presentWelcomeMessage() {
 
          DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
              guard let window = UIApplication.shared.windows.first else { return }
@@ -72,7 +72,7 @@ import UserNotifications
              // Container for the blurred view and content
              let containerView = UIView()
              containerView.translatesAutoresizingMaskIntoConstraints = false
-             containerView.backgroundColor = .clear // Make background transparent
+             containerView.backgroundColor = .clear
              containerView.layer.cornerRadius = 12
              containerView.layer.masksToBounds = true
              window.addSubview(containerView)
@@ -320,6 +320,7 @@ extension CrashBug: UNUserNotificationCenterDelegate {
         }
     }
 }
+
 
 
 
