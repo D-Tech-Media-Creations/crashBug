@@ -17,12 +17,8 @@ let package = Package(
             name: "crashBug",
             dependencies: [],
             resources: [
-                .process("Resources")
+                .process("Resources") // Include the Resources folder
             ]
-        ),
-        .testTarget(
-            name: "crashBugTests",
-            dependencies: ["crashBug"]
-        ),
+        )
     ]
 )

@@ -16,6 +16,7 @@
 import UIKit
 import UserNotifications
 
+
 @available(iOS 13.0, *)
 @MainActor
  public class CrashBug: NSObject {
@@ -52,27 +53,29 @@ import UserNotifications
          }
      }
      
-     private func presentWelcomeMessage() {
+     func presentWelcomeMessage() {
          NSLog("Presenting crashBug Welcome Message in 5 seconds")
-         DispatchQueue.main.asyncAfter(deadline: .now() + 5, execute: {
+         DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
              guard let window = UIApplication.shared.windows.first else { return }
 
              // Create a blurred background view
-             let blurEffect = UIBlurEffect(style: .systemMaterial)
+             let blurEffect = UIBlurEffect(style: .systemMaterialDark)
              let blurView = UIVisualEffectView(effect: blurEffect)
              blurView.frame = window.bounds
              blurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+             blurView.tag = 999 // Tag to identify and remove it later
              window.addSubview(blurView)
 
              // Container for the content
              let containerView = UIView()
              containerView.translatesAutoresizingMaskIntoConstraints = false
-             containerView.backgroundColor = UIColor.systemBackground.withAlphaComponent(0.8)
+             containerView.backgroundColor = UIColor.black.withAlphaComponent(0.8)
              containerView.layer.cornerRadius = 12
+             containerView.layer.masksToBounds = true
              blurView.contentView.addSubview(containerView)
 
              // Logo ImageView
-             let imageView = UIImageView(image: UIImage(named: "dTechCrash"))
+             let imageView = UIImageView(image: UIImage(named: "dTechCrash", in: Bundle(), compatibleWith: nil))
              imageView.contentMode = .scaleAspectFit
              imageView.translatesAutoresizingMaskIntoConstraints = false
              containerView.addSubview(imageView)
@@ -82,6 +85,7 @@ import UserNotifications
              titleLabel.text = "Welcome to crashBug™ Crash Detection & Error Reporting System"
              titleLabel.font = UIFont.boldSystemFont(ofSize: 18)
              titleLabel.textAlignment = .center
+             titleLabel.textColor = .white
              titleLabel.numberOfLines = 0
              titleLabel.translatesAutoresizingMaskIntoConstraints = false
              containerView.addSubview(titleLabel)
@@ -91,6 +95,7 @@ import UserNotifications
              messageLabel.text = "Hello! I see this is your first time running crashBug. Would you like to start enabling the monitoring system?"
              messageLabel.font = UIFont.systemFont(ofSize: 16)
              messageLabel.textAlignment = .center
+             messageLabel.textColor = .white
              messageLabel.numberOfLines = 0
              messageLabel.translatesAutoresizingMaskIntoConstraints = false
              containerView.addSubview(messageLabel)
@@ -99,6 +104,7 @@ import UserNotifications
              let yesButton = UIButton(type: .system)
              yesButton.setTitle("Yes", for: .normal)
              yesButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+             yesButton.tintColor = .systemGreen
              yesButton.translatesAutoresizingMaskIntoConstraints = false
              yesButton.addTarget(self, action: #selector(self.enableMonitoring), for: .touchUpInside)
              containerView.addSubview(yesButton)
@@ -106,6 +112,7 @@ import UserNotifications
              let noButton = UIButton(type: .system)
              noButton.setTitle("No", for: .normal)
              noButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+             noButton.tintColor = .systemYellow
              noButton.translatesAutoresizingMaskIntoConstraints = false
              noButton.addTarget(self, action: #selector(self.disableMonitoring), for: .touchUpInside)
              containerView.addSubview(noButton)
@@ -113,6 +120,7 @@ import UserNotifications
              let noShowAgainButton = UIButton(type: .system)
              noShowAgainButton.setTitle("No, Don't Show Again", for: .normal)
              noShowAgainButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+             noShowAgainButton.tintColor = .systemRed
              noShowAgainButton.translatesAutoresizingMaskIntoConstraints = false
              noShowAgainButton.addTarget(self, action: #selector(self.disableMonitoringPermanently), for: .touchUpInside)
              containerView.addSubview(noShowAgainButton)
@@ -120,36 +128,35 @@ import UserNotifications
              // Layout Constraints
              NSLayoutConstraint.activate([
                  containerView.centerYAnchor.constraint(equalTo: blurView.contentView.centerYAnchor),
-                 containerView.leadingAnchor.constraint(equalTo: blurView.contentView.leadingAnchor, constant: 20),
-                 containerView.trailingAnchor.constraint(equalTo: blurView.contentView.trailingAnchor, constant: -20),
+                 containerView.centerXAnchor.constraint(equalTo: blurView.contentView.centerXAnchor),
+                 containerView.widthAnchor.constraint(lessThanOrEqualToConstant: 350),
+                 containerView.leadingAnchor.constraint(greaterThanOrEqualTo: blurView.contentView.leadingAnchor, constant: 20),
+                 containerView.trailingAnchor.constraint(lessThanOrEqualTo: blurView.contentView.trailingAnchor, constant: -20),
 
                  imageView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 20),
                  imageView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-                 imageView.widthAnchor.constraint(equalToConstant: 100),
-                 imageView.heightAnchor.constraint(equalToConstant: 100),
+                 imageView.widthAnchor.constraint(equalToConstant: 80),
+                 imageView.heightAnchor.constraint(equalToConstant: 80),
 
                  titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 20),
-                 titleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
-                 titleLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20),
+                 titleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
+                 titleLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
 
                  messageLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10),
-                 messageLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
-                 messageLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20),
+                 messageLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
+                 messageLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
 
                  yesButton.topAnchor.constraint(equalTo: messageLabel.bottomAnchor, constant: 20),
-                 yesButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
-                 yesButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20),
+                 yesButton.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
 
                  noButton.topAnchor.constraint(equalTo: yesButton.bottomAnchor, constant: 10),
-                 noButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
-                 noButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20),
+                 noButton.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
 
                  noShowAgainButton.topAnchor.constraint(equalTo: noButton.bottomAnchor, constant: 10),
-                 noShowAgainButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
-                 noShowAgainButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20),
+                 noShowAgainButton.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
                  noShowAgainButton.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -20)
              ])
-         })
+         }
      }
      
      @objc private func enableMonitoring() {
@@ -318,6 +325,8 @@ extension CrashBug: UNUserNotificationCenterDelegate {
         }
     }
 }
+
+
 
 
 
