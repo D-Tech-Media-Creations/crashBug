@@ -30,7 +30,7 @@ import UserNotifications
     }
     
     // Singleton instance
-     public static let shared = CrashBug()
+     static let shared = CrashBug()
      var latestCrashLog: String?
     
     override init() {
@@ -42,7 +42,7 @@ import UserNotifications
     }
     
     // Start monitoring for app crashes
-    func startMonitoring() {
+    public func startMonitoring() {
         NSSetUncaughtExceptionHandler { exception in
             CrashBug.handleException(exception: exception)
         }
@@ -50,7 +50,7 @@ import UserNotifications
     }
     
     // Set up signal handlers for common signals
-     static func setupSignalHandler() {
+     static public func setupSignalHandler() {
         signal(SIGABRT, crashSignalHandler)
         signal(SIGILL, crashSignalHandler)
         signal(SIGSEGV, crashSignalHandler)
@@ -65,14 +65,14 @@ import UserNotifications
     }
     
     // Handle uncaught exceptions
-     static func handleException(exception: NSException) {
+     static public func handleException(exception: NSException) {
         let crashLog = CrashBug.shared.createLog(for: exception)
         CrashBug.shared.saveCrashLog(crashLog)
         CrashBug.shared.displayCrashNotification(with: crashLog)
     }
     
     // Handle signal-based crashes
-     static func handleSignal(_ signal: Int32) {
+     static public func handleSignal(_ signal: Int32) {
         var crashInfo = "App received signal: \(signal)\n"
         crashInfo += "Call stack:\n"
         crashInfo += Thread.callStackSymbols.joined(separator: "\n")
@@ -81,7 +81,7 @@ import UserNotifications
     }
     
     // Create a log for the given exception
-     func createLog(for exception: NSException) -> String {
+     public func createLog(for exception: NSException) -> String {
         var log = "App Crash Log\n"
         log += "====================\n"
         log += "Human Readable Section\n"
@@ -98,7 +98,7 @@ import UserNotifications
     }
     
     // Save the crash log to a file
-     func saveCrashLog(_ log: String) {
+     public func saveCrashLog(_ log: String) {
         guard let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
             return
         }
@@ -113,7 +113,7 @@ import UserNotifications
     }
     
     // Request notification permissions
-     func requestNotificationPermissions() {
+     public func requestNotificationPermissions() {
         let center = UNUserNotificationCenter.current()
         center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
             if granted {
@@ -125,7 +125,7 @@ import UserNotifications
     }
     
     // Display crash notification with summary
-     func displayCrashNotification(with log: String) {
+     public func displayCrashNotification(with log: String) {
         let appName = Bundle.main.infoDictionary?[kCFBundleNameKey as String] as? String ?? "The App"
         let logSummary = log.split(separator: "\n").prefix(5).joined(separator: "\n")
         
@@ -147,8 +147,8 @@ import UserNotifications
         UNUserNotificationCenter.current().delegate = self
     }
     
-    // Test crash function
-    func testCrash(after duration: TimeInterval, reason: String, shouldGenerateLog: Bool) {
+    // Test crash public function
+    public func testCrash(after duration: TimeInterval, reason: String, shouldGenerateLog: Bool) {
         DispatchQueue.main.asyncAfter(deadline: .now() + duration) {
             if shouldGenerateLog {
                 let exception = NSException(name: .genericException, reason: reason, userInfo: nil)
@@ -165,7 +165,7 @@ extension CrashBug: UNUserNotificationCenterDelegate {
 
     
     // Display the log file within the app
-     func displayCrashLog(_ log: String) {
+     public func displayCrashLog(_ log: String) {
         let alert = UIAlertController(title: "Crash Log", message: log, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         
@@ -174,6 +174,7 @@ extension CrashBug: UNUserNotificationCenterDelegate {
         }
     }
 }
+
 
 
 
