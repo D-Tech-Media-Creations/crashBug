@@ -85,25 +85,25 @@ import UserNotifications
 
              // Title Label
              let titleLabel = UILabel()
+             titleLabel.translatesAutoresizingMaskIntoConstraints = false
              titleLabel.text = "Welcome to crashBug™ Crash Detection & Error Reporting System"
              titleLabel.font = UIFont.boldSystemFont(ofSize: 18)
              titleLabel.textAlignment = .center
              titleLabel.textColor = .white
              titleLabel.numberOfLines = 0
-             titleLabel.translatesAutoresizingMaskIntoConstraints = false
              containerView.addSubview(titleLabel)
 
              // Message Label
              let messageLabel = UILabel()
+             messageLabel.translatesAutoresizingMaskIntoConstraints = false
              messageLabel.text = "Hello! I see this is your first time running crashBug. Would you like to start enabling the monitoring system?"
              messageLabel.font = UIFont.systemFont(ofSize: 16)
              messageLabel.textAlignment = .center
              messageLabel.textColor = .white
              messageLabel.numberOfLines = 0
-             messageLabel.translatesAutoresizingMaskIntoConstraints = false
              containerView.addSubview(messageLabel)
 
-             // Styled Buttons
+             // Buttons
              let yesButton = self.createButton(title: "Yes", backgroundColor: .systemGreen)
              yesButton.addTarget(self, action: #selector(self.enableMonitoring), for: .touchUpInside)
              containerView.addSubview(yesButton)
