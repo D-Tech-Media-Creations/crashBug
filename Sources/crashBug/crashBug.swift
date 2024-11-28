@@ -20,26 +20,167 @@ import UserNotifications
 @MainActor
  public class CrashBug: NSObject {
     // Property to check if CrashBug is enabled
-    var isEnabled: Bool {
-        get {
-            UserDefaults.standard.bool(forKey: "crashBugEnabled")
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: "crashBugEnabled")
-        }
-    }
+     var isEnabled: Bool {
+         get {
+             UserDefaults.standard.bool(forKey: "crashBugEnabled")
+         }
+         set {
+             UserDefaults.standard.set(newValue, forKey: "crashBugEnabled")
+         }
+     }
+
+     private var hasShownWelcomeMessage: Bool {
+         get {
+             UserDefaults.standard.bool(forKey: "hasShownCrashBugWelcome")
+         }
+         set {
+             UserDefaults.standard.set(newValue, forKey: "hasShownCrashBugWelcome")
+         }
+     }
     
     // Singleton instance
      public static let shared = CrashBug()
      var latestCrashLog: String?
     
-    override init() {
-        super.init()
-        requestNotificationPermissions()
-        if isEnabled {
-            startMonitoring()
-        }
-    }
+     override init() {
+         super.init()
+         requestNotificationPermissions()
+         if !hasShownWelcomeMessage {
+             presentWelcomeMessage()
+         } else if isEnabled {
+             startMonitoring()
+         }
+     }
+     
+     private func presentWelcomeMessage() {
+         guard let window = UIApplication.shared.windows.first else { return }
+
+         // Create a blurred background view
+         let blurEffect = UIBlurEffect(style: .systemMaterial)
+         let blurView = UIVisualEffectView(effect: blurEffect)
+         blurView.frame = window.bounds
+         blurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+         window.addSubview(blurView)
+
+         // Container for the content
+         let containerView = UIView()
+         containerView.translatesAutoresizingMaskIntoConstraints = false
+         containerView.backgroundColor = UIColor.systemBackground.withAlphaComponent(0.8)
+         containerView.layer.cornerRadius = 12
+         blurView.contentView.addSubview(containerView)
+
+         // Logo ImageView
+         let imageView = UIImageView(image: UIImage(named: "dTechCrash"))
+         imageView.contentMode = .scaleAspectFit
+         imageView.translatesAutoresizingMaskIntoConstraints = false
+         containerView.addSubview(imageView)
+
+         // Title Label
+         let titleLabel = UILabel()
+         titleLabel.text = "Welcome to crashBug™ Crash Detection & Error Reporting System"
+         titleLabel.font = UIFont.boldSystemFont(ofSize: 18)
+         titleLabel.textAlignment = .center
+         titleLabel.numberOfLines = 0
+         titleLabel.translatesAutoresizingMaskIntoConstraints = false
+         containerView.addSubview(titleLabel)
+
+         // Message Label
+         let messageLabel = UILabel()
+         messageLabel.text = "Hello! I see this is your first time running crashBug. Would you like to start enabling the monitoring system?"
+         messageLabel.font = UIFont.systemFont(ofSize: 16)
+         messageLabel.textAlignment = .center
+         messageLabel.numberOfLines = 0
+         messageLabel.translatesAutoresizingMaskIntoConstraints = false
+         containerView.addSubview(messageLabel)
+
+         // Buttons
+         let yesButton = UIButton(type: .system)
+         yesButton.setTitle("Yes", for: .normal)
+         yesButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+         yesButton.translatesAutoresizingMaskIntoConstraints = false
+         yesButton.addTarget(self, action: #selector(enableMonitoring), for: .touchUpInside)
+         containerView.addSubview(yesButton)
+
+         let noButton = UIButton(type: .system)
+         noButton.setTitle("No", for: .normal)
+         noButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+         noButton.translatesAutoresizingMaskIntoConstraints = false
+         noButton.addTarget(self, action: #selector(disableMonitoring), for: .touchUpInside)
+         containerView.addSubview(noButton)
+
+         let noShowAgainButton = UIButton(type: .system)
+         noShowAgainButton.setTitle("No, Don't Show Again", for: .normal)
+         noShowAgainButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+         noShowAgainButton.translatesAutoresizingMaskIntoConstraints = false
+         noShowAgainButton.addTarget(self, action: #selector(disableMonitoringPermanently), for: .touchUpInside)
+         containerView.addSubview(noShowAgainButton)
+
+         // Layout Constraints
+         NSLayoutConstraint.activate([
+             containerView.centerYAnchor.constraint(equalTo: blurView.contentView.centerYAnchor),
+             containerView.leadingAnchor.constraint(equalTo: blurView.contentView.leadingAnchor, constant: 20),
+             containerView.trailingAnchor.constraint(equalTo: blurView.contentView.trailingAnchor, constant: -20),
+
+             imageView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 20),
+             imageView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+             imageView.widthAnchor.constraint(equalToConstant: 100),
+             imageView.heightAnchor.constraint(equalToConstant: 100),
+
+             titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 20),
+             titleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
+             titleLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20),
+
+             messageLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10),
+             messageLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
+             messageLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20),
+
+             yesButton.topAnchor.constraint(equalTo: messageLabel.bottomAnchor, constant: 20),
+             yesButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
+             yesButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20),
+
+             noButton.topAnchor.constraint(equalTo: yesButton.bottomAnchor, constant: 10),
+             noButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
+             noButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20),
+
+             noShowAgainButton.topAnchor.constraint(equalTo: noButton.bottomAnchor, constant: 10),
+             noShowAgainButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
+             noShowAgainButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20),
+             noShowAgainButton.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -20)
+         ])
+     }
+     
+     @objc private func enableMonitoring() {
+         isEnabled = true
+         hasShownWelcomeMessage = true
+         startMonitoring()
+         removeWelcomeMessage()
+     }
+
+     @objc private func disableMonitoring() {
+         isEnabled = false
+         hasShownWelcomeMessage = true
+         removeWelcomeMessage()
+     }
+
+     @objc private func disableMonitoringPermanently() {
+         isEnabled = false
+         hasShownWelcomeMessage = true
+         UserDefaults.standard.set(true, forKey: "crashBugDoNotShowWelcomeAgain")
+         removeWelcomeMessage()
+     }
+     
+     private func removeWelcomeMessage() {
+         guard let window = UIApplication.shared.windows.first else { return }
+         
+         // Find the blur view by its tag
+         if let blurView = window.viewWithTag(999) {
+             UIView.animate(withDuration: 0.3, animations: {
+                 blurView.alpha = 0
+             }) { _ in
+                 blurView.removeFromSuperview()
+             }
+         }
+     }
     
     // Start monitoring for app crashes
     public func startMonitoring() {
@@ -174,6 +315,7 @@ extension CrashBug: UNUserNotificationCenterDelegate {
         }
     }
 }
+
 
 
 
