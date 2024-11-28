@@ -54,6 +54,16 @@ import UserNotifications
          }
      }
      
+     private func createButton(title: String, backgroundColor: UIColor) -> UIButton {
+         let button = UIButton(type: .system)
+         button.setTitle(title, for: .normal)
+         button.backgroundColor = backgroundColor
+         button.tintColor = .white // Text color
+         button.layer.cornerRadius = 8
+         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+         return button
+     }
+     
       func presentWelcomeMessage() {
 
          DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
@@ -94,15 +104,15 @@ import UserNotifications
              containerView.addSubview(messageLabel)
 
              // Styled Buttons
-             let yesButton = createButton(title: "Yes", backgroundColor: .systemGreen)
+             let yesButton = self.createButton(title: "Yes", backgroundColor: .systemGreen)
              yesButton.addTarget(self, action: #selector(self.enableMonitoring), for: .touchUpInside)
              containerView.addSubview(yesButton)
 
-             let noButton = createButton(title: "No", backgroundColor: .systemYellow)
+             let noButton = self.createButton(title: "No", backgroundColor: .systemYellow)
              noButton.addTarget(self, action: #selector(self.disableMonitoring), for: .touchUpInside)
              containerView.addSubview(noButton)
 
-             let noShowAgainButton = createButton(title: "No, Don't Show Again", backgroundColor: .systemRed)
+             let noShowAgainButton = self.createButton(title: "No, Don't Show Again", backgroundColor: .systemRed)
              noShowAgainButton.addTarget(self, action: #selector(self.disableMonitoringPermanently), for: .touchUpInside)
              containerView.addSubview(noShowAgainButton)
 
@@ -310,6 +320,7 @@ extension CrashBug: UNUserNotificationCenterDelegate {
         }
     }
 }
+
 
 
 
