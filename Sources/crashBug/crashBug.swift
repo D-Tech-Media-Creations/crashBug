@@ -54,13 +54,14 @@ import UserNotifications
          }
      }
      
-      func createButton(title: String, backgroundColor: UIColor) -> UIButton {
+     private func createButton(title: String, frame: CGRect, backgroundColor: UIColor) -> UIButton {
          let button = UIButton(type: .system)
+         button.frame = frame
          button.setTitle(title, for: .normal)
          button.backgroundColor = backgroundColor
-         button.tintColor = .white // Text color
-         button.layer.cornerRadius = 8
+         button.setTitleColor(.white, for: .normal)
          button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+         button.layer.cornerRadius = 8
          return button
      }
      
@@ -69,54 +70,80 @@ import UserNotifications
          DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
              guard let window = UIApplication.shared.windows.first else { return }
 
-             // Container for the blurred view and content
-             let containerView = UIView()
-             containerView.translatesAutoresizingMaskIntoConstraints = false
-             containerView.backgroundColor = .clear // Make background transparent
-             containerView.layer.cornerRadius = 12
-             containerView.layer.masksToBounds = true
-             window.addSubview(containerView)
+             // Set fixed frame for the blur view
+             let blurFrame = CGRect(x: 463, y: 316, width: 450, height: 400)
 
-             // Create a blurred background view inside the container
+             // Create the blurred background view
              let blurEffect = UIBlurEffect(style: .systemMaterialDark)
              let blurView = UIVisualEffectView(effect: blurEffect)
-             blurView.translatesAutoresizingMaskIntoConstraints = false
-             containerView.addSubview(blurView)
+             blurView.frame = blurFrame
+             blurView.layer.cornerRadius = 12
+             blurView.clipsToBounds = true
+             window.addSubview(blurView)
 
              // Title Label
              let titleLabel = UILabel()
-             titleLabel.text = "Welcome to crashBug™ Crash Detection & Error Reporting System"
-             titleLabel.font = UIFont.boldSystemFont(ofSize: 18)
+             titleLabel.frame = CGRect(x: 20, y: 20, width: blurFrame.width - 40, height: 60)
+             titleLabel.text = "Welcome to crashBug!"
+             titleLabel.font = UIFont.boldSystemFont(ofSize: 24)
              titleLabel.textAlignment = .center
              titleLabel.textColor = .white
              titleLabel.numberOfLines = 0
-             titleLabel.translatesAutoresizingMaskIntoConstraints = false
-             containerView.addSubview(titleLabel)
+             blurView.contentView.addSubview(titleLabel)
 
              // Message Label
              let messageLabel = UILabel()
-             messageLabel.text = "Hello! I see this is your first time running crashBug. Would you like to start enabling the monitoring system?"
+             messageLabel.frame = CGRect(x: 20, y: 90, width: blurFrame.width - 40, height: 80)
+             messageLabel.text = "Would you like to start crashBug the crash monitoring system?"
              messageLabel.font = UIFont.systemFont(ofSize: 16)
              messageLabel.textAlignment = .center
              messageLabel.textColor = .white
              messageLabel.numberOfLines = 0
-             messageLabel.translatesAutoresizingMaskIntoConstraints = false
-             containerView.addSubview(messageLabel)
+             blurView.contentView.addSubview(messageLabel)
 
-             // Styled Buttons
-             let yesButton = self.createButton(title: "Yes", backgroundColor: .systemGreen)
+             // Buttons
+             let buttonWidth: CGFloat = 150
+             let buttonHeight: CGFloat = 44
+             let buttonSpacing: CGFloat = 10
+
+             let yesButton = self.createButton(
+                 title: "Yes",
+                 frame: CGRect(
+                     x: (blurFrame.width - buttonWidth) / 2,
+                     y: blurFrame.height - buttonHeight * 3 - buttonSpacing * 2 - 20,
+                     width: buttonWidth,
+                     height: buttonHeight
+                 ),
+                 backgroundColor: .systemGreen
+             )
              yesButton.addTarget(self, action: #selector(self.enableMonitoring), for: .touchUpInside)
-             containerView.addSubview(yesButton)
+             blurView.contentView.addSubview(yesButton)
 
-             let noButton = self.createButton(title: "No", backgroundColor: .systemYellow)
+             let noButton = self.createButton(
+                 title: "No",
+                 frame: CGRect(
+                     x: (blurFrame.width - buttonWidth) / 2,
+                     y: blurFrame.height - buttonHeight * 2 - buttonSpacing - 20,
+                     width: buttonWidth,
+                     height: buttonHeight
+                 ),
+                 backgroundColor: .systemYellow
+             )
              noButton.addTarget(self, action: #selector(self.disableMonitoring), for: .touchUpInside)
-             containerView.addSubview(noButton)
+             blurView.contentView.addSubview(noButton)
 
-             let noShowAgainButton = self.createButton(title: "No, Don't Show Again", backgroundColor: .systemRed)
+             let noShowAgainButton = self.createButton(
+                 title: "Don't Show Again",
+                 frame: CGRect(
+                     x: (blurFrame.width - buttonWidth) / 2,
+                     y: blurFrame.height - buttonHeight - 20,
+                     width: buttonWidth,
+                     height: buttonHeight
+                 ),
+                 backgroundColor: .systemRed
+             )
              noShowAgainButton.addTarget(self, action: #selector(self.disableMonitoringPermanently), for: .touchUpInside)
-             containerView.addSubview(noShowAgainButton)
-
-      
+             blurView.contentView.addSubview(noShowAgainButton)
          }
      }
      
