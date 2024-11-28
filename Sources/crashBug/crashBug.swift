@@ -47,7 +47,7 @@ import UserNotifications
          super.init()
          requestNotificationPermissions()
          if !hasShownWelcomeMessage {
-             NSLog("Presenting crashBug Welcome Message in 5 seconds")
+             NSLog("Presenting crashBug Welcome Message in 10 seconds")
              presentWelcomeMessage()
          } else if isEnabled {
              startMonitoring()
@@ -59,15 +59,15 @@ import UserNotifications
          button.frame = frame
          button.setTitle(title, for: .normal)
          button.backgroundColor = backgroundColor
-         button.setTitleColor(.white, for: .normal)
+         button.setTitleColor(.black, for: .normal)
          button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
          button.layer.cornerRadius = 8
          return button
      }
      
       func presentWelcomeMessage() {
-         NSLog("Presenting crashBug Welcome Message in 5 seconds")
-         DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+
+         DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
              guard let window = UIApplication.shared.windows.first else { return }
 
              // Set fixed frame for the blur view
