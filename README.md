@@ -1,4 +1,4 @@
-# crashBug
+# crashBug 1.0
 
 `crashBug` is a Swift (UIKit) class designed to detect, log, and notify about app crashes. It provides comprehensive crash reporting and an easy-to-use interface for testing crash scenarios. This can be useful during development to ensure you catch and diagnose crashes efficiently.
 
