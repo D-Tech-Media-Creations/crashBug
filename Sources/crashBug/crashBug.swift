@@ -30,7 +30,7 @@ public class CrashBug: NSObject {
     }
     
     // Singleton instance
-    static let shared = CrashBug()
+    public static let shared = CrashBug()
     private var latestCrashLog: String?
     
     override init() {
