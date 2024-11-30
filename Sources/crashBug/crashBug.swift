@@ -169,19 +169,10 @@ import UserNotifications
      
      private func removeWelcomeMessage() {
          NSLog(#function)
-          let window = UIApplication.shared.windows.first
+         resetViewControllers()
          
          // Find the blur view by its tag
-         if let blurView = window?.viewWithTag(0) {
-             UIView.animate(withDuration: 0.3, animations: {
-                 blurView.alpha = 0
-          
-             }) { _ in
-                 window?.removeFromSuperview()
-                 blurView.removeFromSuperview()
-                 resetViewControllers()
-             }
-         }
+    
      }
     
     // Start monitoring for app crashes
@@ -384,3 +375,4 @@ func dTechTimer(time: Double, completion: @escaping (Bool) -> ()) {
     })
     
 }
+
