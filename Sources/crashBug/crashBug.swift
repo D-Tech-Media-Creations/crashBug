@@ -69,7 +69,7 @@ import UserNotifications
      
       func presentWelcomeMessage() {
 
-          DispatchQueue.main.asyncAfter(deadline: .now() + 10) { [self] in
+          DispatchQueue.main.asyncAfter(deadline: .now() + 20) { [self] in
              guard let window = UIApplication.shared.windows.first else { return }
 
              // Set fixed frame for the blur view
@@ -168,6 +168,7 @@ import UserNotifications
      }
      
      private func removeWelcomeMessage() {
+         NSLog(#function)
           let window = UIApplication.shared.windows.first
          
          // Find the blur view by its tag
@@ -317,6 +318,7 @@ extension CrashBug: UNUserNotificationCenterDelegate {
         }
     }
 }
+
 
 
 
