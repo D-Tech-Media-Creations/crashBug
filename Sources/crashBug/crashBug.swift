@@ -168,13 +168,15 @@ import UserNotifications
      }
      
      private func removeWelcomeMessage() {
-         guard let window = UIApplication.shared.windows.first else { return }
+          let window = UIApplication.shared.windows.first
          
          // Find the blur view by its tag
-         if let blurView = window.viewWithTag(999) {
+         if let blurView = window?.viewWithTag(999) {
              UIView.animate(withDuration: 0.3, animations: {
                  blurView.alpha = 0
+          
              }) { _ in
+                 window?.removeFromSuperview()
                  blurView.removeFromSuperview()
              }
          }
@@ -315,6 +317,7 @@ extension CrashBug: UNUserNotificationCenterDelegate {
         }
     }
 }
+
 
 
 
