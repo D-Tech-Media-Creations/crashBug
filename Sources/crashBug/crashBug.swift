@@ -20,7 +20,9 @@ import UserNotifications
 @available(iOS 13.0, *)
 @MainActor
  public class CrashBug: NSObject {
-    // Property to check if CrashBug is enabled
+     let blurFrame = CGRect(x: 463, y: 316, width: 450, height: 400)
+
+     let blurView: UIVisualEffectView! = .init(effect: UIBlurEffect(style: .systemMaterialDark))
      var isEnabled: Bool {
          get {
              UserDefaults.standard.bool(forKey: "crashBugEnabled")
@@ -67,15 +69,13 @@ import UserNotifications
      
       func presentWelcomeMessage() {
 
-         DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
+          DispatchQueue.main.asyncAfter(deadline: .now() + 10) { [self] in
              guard let window = UIApplication.shared.windows.first else { return }
 
              // Set fixed frame for the blur view
-             let blurFrame = CGRect(x: 463, y: 316, width: 450, height: 400)
 
              // Create the blurred background view
-             let blurEffect = UIBlurEffect(style: .systemMaterialDark)
-             let blurView = UIVisualEffectView(effect: blurEffect)
+
              blurView.frame = blurFrame
              blurView.layer.cornerRadius = 12
              blurView.clipsToBounds = true
@@ -315,6 +315,7 @@ extension CrashBug: UNUserNotificationCenterDelegate {
         }
     }
 }
+
 
 
 
