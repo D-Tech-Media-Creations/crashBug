@@ -179,6 +179,7 @@ import UserNotifications
              }) { _ in
                  window?.removeFromSuperview()
                  blurView.removeFromSuperview()
+                 resetViewControllers()
              }
          }
      }
@@ -332,4 +333,54 @@ extension CrashBug: UNUserNotificationCenterDelegate {
 
 
 
+func resetViewControllers() {
+    guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+          let window = windowScene.windows.first else {
+        print("No active window scene found")
+        return
+    }
 
+    // Dismiss all presented view controllers recursively
+    func dismissRecursively(_ viewController: UIViewController, completion: @escaping () -> Void) {
+        if let presentedVC = viewController.presentedViewController {
+            presentedVC.dismiss(animated: true) {
+                viewController.view.removeFromSuperview()
+                viewController.removeFromParent()
+                viewController.view = nil
+                dTechTimer(time: 0.5) { (true) in
+                    dismissRecursively(viewController, completion: completion)
+                }
+            }
+        } else {
+            completion()
+        }
+    }
+
+    if let rootVC = window.rootViewController {
+        dismissRecursively(rootVC) {
+            // After dismissing all presented view controllers, reset to the initial view controller
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            if let initialViewController = storyboard.instantiateInitialViewController() {
+                // Reset the root view controller
+                window.rootViewController = initialViewController
+                window.makeKeyAndVisible()
+
+                // Add a transition animation for a smoother reset effect
+                let transition = CATransition()
+                transition.type = .fade
+                transition.duration = 0.3
+                window.layer.add(transition, forKey: kCATransition)
+            } else {
+                print("Unable to instantiate the initial view controller")
+            }
+        }
+    }
+}
+
+
+func dTechTimer(time: Double, completion: @escaping (Bool) -> ()) {
+    DispatchQueue.main.asyncAfter(deadline: .now() + time, execute: {
+        completion(true)
+    })
+    
+}
